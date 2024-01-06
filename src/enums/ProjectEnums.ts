@@ -1,0 +1,25 @@
+export enum ProjectStages {
+  SITE_PREPARATION = 'SITE_PREPARATION',
+  EXCAVATION = 'EXCAVATION',
+  FOUNDATION = 'FOUNDATION',
+  FRAMING = 'FRAMING',
+  INTERIOR_FINISHES = 'INTERIOR_FINISHES',
+  EXTERIOR_FINISHES = 'EXTERIOR_FINISHES',
+}
+
+
+export enum ProjectStatuses {
+  PENDING = 'PENDING',
+  DECLINED = 'DECLINED',
+  ACTIVE = 'ACTIVE',
+  CLOSED = 'CLOSED',
+  ALL = 'ALL'
+}
+
+export enum ProjectPaymentPlan {
+  DAILY = "DAILY",
+  WEEKLY = "WEEKLY",
+  MONTHLY = "MONTHLY",
+  YEARLY = "YEARLY"
+}
+

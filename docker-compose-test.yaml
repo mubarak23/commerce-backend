@@ -1,0 +1,58 @@
+version: '3.7'
+
+services:
+  cinderbuildtestdb:
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    container_name: cinderbuildtestdb
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-asdffdsa}
+      PGDATA: /data/postgres
+      TZ: 'UTC'
+      PGTZ: 'UTC'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - postgres
+  cinderbuild-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    image: cinderbuild-tests
+    command: bash -c 'npm test'
+    env_file:
+     - ./.env.test
+    environment:
+      NODE_ENV: automated_test
+      JWT_SECRET: lsldkfb72824nwfomow4
+
+      DATABASE_HOSTNAME: cinderbuildtestdb
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: asdffdsa
+      DATABASE_NAME: cinderbuild_db_dev
+      
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    volumes:
+      - cinderbuild-tests-volume:/srv/cinderbuild
+    networks:
+      - postgres
+    depends_on:
+      cinderbuildtestdb:
+        condition: service_healthy
+networks:
+  postgres:
+    driver: bridge
+volumes:
+  postgres:
+  cinderbuild-tests-volume:

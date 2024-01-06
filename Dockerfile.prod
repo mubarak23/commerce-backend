@@ -1,0 +1,68 @@
+FROM node:14.19.3
+
+ARG NODE_ENV
+ARG JWT_SECRET
+
+ARG SENDGRID_API_KEY
+ARG DATABASE_HOSTNAME
+ARG DATABASE_PORT
+ARG DATABASE_USERNAME
+ARG DATABASE_PASSWORD
+ARG DATABASE_NAME
+ARG SENTRY_DSN
+
+ARG GOOGLE_MAPS_API_KEY
+ARG PAYSTACK_SECRET_KEY
+ARG MULTITEXTER_API_KEY
+
+ARG CLOUDINARY_APP_NAME
+ARG CLOUDINARY_API_KEY
+ARG CLOUDINARY_API_SECRET
+
+ARG TWILIO_ACCOUNT_SID
+ARG TWILIO_AUTH_TOKEN
+
+ARG FIREBASE_project_id
+ARG FIREBASE_private_key
+ARG FIREBASE_client_email
+
+RUN mkdir /srv/cinderbuild && chown node:node /srv/cinderbuild
+RUN mkdir /srv/cinderbuild/src && chown node:node /srv/cinderbuild/src
+RUN mkdir /srv/cinderbuild/tests && chown node:node /srv/cinderbuild/tests
+RUN mkdir /srv/cinderbuild/public && chown node:node /srv/cinderbuild/public && chmod 777 /srv/cinderbuild/public
+
+RUN \
+  mkdir /srv/cinderbuild/dist \
+  && chown node:node /srv/cinderbuild/dist \
+  && chmod 777 /srv/cinderbuild/dist
+
+RUN \
+  mkdir /srv/cinderbuild/dist/resources \
+  && chown node:node /srv/cinderbuild/dist/resources \
+  && chmod 777 /srv/cinderbuild/dist/resources
+
+RUN \
+  mkdir /srv/cinderbuild/dist/emailTemplates \
+  && chown node:node /srv/cinderbuild/dist/emailTemplates \
+  && chmod 777 /srv/cinderbuild/dist/emailTemplates
+
+WORKDIR /srv/cinderbuild
+
+COPY package*.json ./
+COPY src/ ./src/
+COPY tests/ ./tests/
+COPY tsconfig.json ./
+COPY tslint.json ./
+COPY tsoa.json ./
+COPY public/ ./public/
+COPY src/resources/ ./dist/resources
+COPY src/emailTemplates/ ./dist/emailTemplates
+
+RUN chown node:node /srv/cinderbuild/public/swagger.json && chmod 777 /srv/cinderbuild/public/swagger.json
+RUN chown node:node /srv/cinderbuild/src/routes.ts && chmod 777 /srv/cinderbuild/src/routes.ts
+
+RUN npm install
+
+RUN npm run dockerbuild
+
+EXPOSE $PORT

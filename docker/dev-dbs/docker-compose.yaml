@@ -1,0 +1,20 @@
+version: '3.5'
+
+services:
+  postgres:
+    image: postgres:12.4
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-asdffdsa}
+      PGDATA: /data/postgres
+      TZ: 'UTC'
+      PGTZ: 'UTC'
+    volumes:
+      - postgres:/data/postgres
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+volumes:
+  postgres:

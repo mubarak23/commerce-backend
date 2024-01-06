@@ -1,0 +1,32 @@
+{
+  "include":[
+    "src/**/*", "test"
+  ],
+  "exclude": [
+    "./web/*",
+    "web/*",
+    "node_modules",
+    "./node_modules",
+    "./node_modules/*"
+  ],
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "resolveJsonModule" : true,
+    "noEmit": false,
+    "outDir": "dist",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "ES2015",
+      "DOM"
+    ],
+    "sourceMap": true,
+
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "alwaysStrict": true,
+    "skipLibCheck": true
+  }
+}
